@@ -42,6 +42,26 @@ static uint16_t auto_pointer_layer_timer = 0;
 #    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD
 #endif     // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
+/**
+ * disable default lightning effects
+ */
+#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
+#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
+#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE
+#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_CROSS
+#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
+#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
+#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
+#define DISABLE_RGB_MATRIX_SPLASH
+#define DISABLE_RGB_MATRIX_MULTISPLASH
+#define DISABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
+#define DISABLE_RGB_MATRIX_REACTIVE_TWINKLE
+
+#define NO_RGBLIGHT_STARTUP
+#define NO_RGB_MATRIX_STARTUP
+#define DISABLE_RGB_MATRIX_REACTIVE_CROSS
+#define DISABLE_RGB_MATRIX_REACTIVE_MULTICROSS
+
 /** these are aliases for german keycodes */
 #define DE_SHARP_S KC_MINS
 #define DE_UMLAUT_U KC_LBRC
@@ -104,7 +124,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
         KC_TAB, XXXXXXX, XXXXXXX, KC_AGIN, KC_UNDO, KC_VOLD,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       _______, XXXXXXX, XXXXXXX, KC_COPY, KC_PASTE, XXXXXXX,   KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, KC_HOME,  KC_END,
+       _______, XXXXXXX,  KC_CUT, KC_COPY, KC_PASTE, XXXXXXX,   KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, KC_HOME,  KC_END,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, MS_WHLD, MS_WHLU, XXXXXXX, XXXXXXX,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
@@ -174,16 +194,16 @@ void rgb_matrix_update_pwm_buffers(void);
 
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
-        case 0:
+        case LAYER_BASE:
             rgb_matrix_set_color_all(46, 137, 255);  // blue
             break;
-        case 1:
+        case LAYER_SPECIAL_KEYS:
             rgb_matrix_set_color_all(101, 236, 101);  // green
             break;
-        case 2:
+        case LAYER_NAVIGATION:
             rgb_matrix_set_color_all(158, 100, 216);  // purple
             break;
-        case 3:
+        case LAYER_POINTER:
             rgb_matrix_set_color_all(237, 44, 44);  // red
             break;
         default:
