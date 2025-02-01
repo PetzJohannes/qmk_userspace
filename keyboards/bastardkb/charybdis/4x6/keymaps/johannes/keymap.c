@@ -22,6 +22,7 @@
 
 enum charybdis_keymap_layers {
     LAYER_BASE = 0,
+    LAYER_NUMERIC_KEYS,
     LAYER_SPECIAL_KEYS,
     LAYER_NAVIGATION,
     LAYER_POINTER,
@@ -42,26 +43,6 @@ static uint16_t auto_pointer_layer_timer = 0;
 #    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD
 #endif     // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 
-/**
- * disable default lightning effects
- */
-#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_SIMPLE
-#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_WIDE
-#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTIWIDE
-#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_CROSS
-#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTICROSS
-#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_NEXUS
-#define DISABLE_RGB_MATRIX_SOLID_REACTIVE_MULTINEXUS
-#define DISABLE_RGB_MATRIX_SPLASH
-#define DISABLE_RGB_MATRIX_MULTISPLASH
-#define DISABLE_RGB_MATRIX_RAINBOW_MOVING_CHEVRON
-#define DISABLE_RGB_MATRIX_REACTIVE_TWINKLE
-
-#define NO_RGBLIGHT_STARTUP
-#define NO_RGB_MATRIX_STARTUP
-#define DISABLE_RGB_MATRIX_REACTIVE_CROSS
-#define DISABLE_RGB_MATRIX_REACTIVE_MULTICROSS
-
 /** these are aliases for german keycodes */
 #define DE_SHARP_S KC_MINS
 #define DE_UMLAUT_U KC_LBRC
@@ -73,7 +54,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 /** end of alias keycodes */
 
 #define TO_BASE TO(LAYER_BASE)
-#define TO_SPECIAL_KEYS TO(LAYER_SPECIAL_KEYS)
+#define TO_NUMERIC_KEYS TO(LAYER_NUMERIC_KEYS)
 #define TO_NAVIGATION TO(LAYER_NAVIGATION)
 #define TO_POINTER TO(LAYER_POINTER)
 #define PT_Y LT(LAYER_POINTER, DE_Y)
@@ -98,12 +79,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_LCTL,    PT_Y,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, DE_MINUS, KC_RSFT,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                  TO_SPECIAL_KEYS, TO_NAVIGATION,  KC_LGUI,     TO_POINTER,  ENTER_RALT_ON_HOLD,
+                  TO_NUMERIC_KEYS, TO_NAVIGATION,  KC_LGUI,     TO_POINTER,  ENTER_RALT_ON_HOLD,
                                            KC_SPC, KC_BSPC,     KC_DEL
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
-  [LAYER_SPECIAL_KEYS] = LAYOUT(
+  [LAYER_NUMERIC_KEYS] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -186,29 +167,3 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #    endif // CHARYBDIS_AUTO_SNIPING_ON_LAYER
 */
 #endif     // POINTING_DEVICE_ENABLE
-
-#ifdef RGB_MATRIX_ENABLE
-// Forward-declare this helper function since it is defined in rgb_matrix.c.
-void rgb_matrix_update_pwm_buffers(void);
-#endif
-
-layer_state_t layer_state_set_user(layer_state_t state) {
-    switch (get_highest_layer(state)) {
-        case LAYER_BASE:
-            rgb_matrix_set_color_all(46, 137, 255);  // blue
-            break;
-        case LAYER_SPECIAL_KEYS:
-            rgb_matrix_set_color_all(101, 236, 101);  // green
-            break;
-        case LAYER_NAVIGATION:
-            rgb_matrix_set_color_all(158, 100, 216);  // purple
-            break;
-        case LAYER_POINTER:
-            rgb_matrix_set_color_all(237, 44, 44);  // red
-            break;
-        default:
-            rgb_matrix_set_color_all(0, 0, 255);  // White
-            break;
-    }
-    return state;
-}
