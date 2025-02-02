@@ -79,8 +79,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_LCTL,    PT_Y,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, DE_MINUS, KC_RSFT,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                  TO_NUMERIC_KEYS, TO_NAVIGATION,  KC_LGUI,     TO_POINTER,  ENTER_RALT_ON_HOLD,
-                                           KC_SPC, KC_BSPC,     KC_DEL
+                                  KC_SPC, KC_BSPC,  KC_LGUI,     TO_POINTER,  ENTER_RALT_ON_HOLD,
+                             TO_NUMERIC_KEYS, TO_NAVIGATION,     KC_DEL
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
@@ -94,8 +94,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        _______,  KC_LALT, XXXXXXX, KC_GRV, KC_NUBS, XXXXXXX,    KC_RBRC, KC_NUHS, KC_COMM,  KC_DOT, KC_RALT, _______,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                           TO_BASE, TO_NAVIGATION, _______,     TO_POINTER, _______,
-                                          _______, _______,      _______
+                                   _______, _______, _______,    TO_POINTER, _______,
+                                      TO_BASE, TO_NAVIGATION,    _______
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
@@ -109,8 +109,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, MS_WHLD, MS_WHLU, XXXXXXX, XXXXXXX,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                               TO_BASE, XXXXXXX, _______,        TO_POINTER, _______,
-                                           _______, _______,     _______
+                                  _______, _______, _______,   TO_POINTER, _______,
+                                           TO_BASE, XXXXXXX,   _______
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
