@@ -59,7 +59,8 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define TO_POINTER TO(LAYER_POINTER)
 #define PT_Y LT(LAYER_POINTER, DE_Y)
 #define ENTER_RALT_ON_HOLD MT(MOD_RALT, KC_ENT)
-#define LGUI_LALT_ON_HOLD MT(KC_LALT, KC_LGUI)
+#define TO_NUMERIC_KEYS_LALT_ON_HOLD MT(KC_LALT, TO_NUMERIC_KEYS)
+#define TO_BASE_LALT_ON_HOLD MT(KC_LALT, TO_BASE)
 
 #ifndef POINTING_DEVICE_ENABLE
 #    define DRGSCRL KC_NO
@@ -80,8 +81,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_LCTL,    PT_Y,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, DE_MINUS, KC_RSFT,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                        KC_SPC, KC_BSPC,  LGUI_LALT_ON_HOLD,     TO_POINTER,  ENTER_RALT_ON_HOLD,
-                             TO_NUMERIC_KEYS, TO_NAVIGATION,     KC_DEL
+                                  KC_SPC, KC_BSPC,  KC_LGUI,     TO_POINTER,  ENTER_RALT_ON_HOLD,
+                TO_NUMERIC_KEYS_LALT_ON_HOLD, TO_NAVIGATION,     KC_DEL
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
@@ -93,10 +94,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        _______,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,     KC_6,      KC_7,    KC_8,    KC_9,    KC_0, DE_SHARP_S,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       _______,  KC_LALT, XXXXXXX, KC_GRV, KC_NUBS, XXXXXXX,    KC_RBRC, KC_NUHS, KC_COMM,  KC_DOT, KC_RALT, _______,
+       _______,  _______, XXXXXXX, KC_GRV, KC_NUBS, XXXXXXX,    KC_RBRC, KC_NUHS, KC_COMM,  KC_DOT, KC_RALT, _______,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
                                    _______, _______, _______,    TO_POINTER, _______,
-                                      TO_BASE, TO_NAVIGATION,    _______
+                                   TO_BASE_LALT_ON_HOLD, TO_NAVIGATION,    _______
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
