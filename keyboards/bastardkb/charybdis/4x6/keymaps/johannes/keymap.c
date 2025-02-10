@@ -59,8 +59,8 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define TO_POINTER TO(LAYER_POINTER)
 #define PT_Y LT(LAYER_POINTER, DE_Y)
 #define ENTER_RALT_ON_HOLD MT(MOD_RALT, KC_ENT)
-#define TO_NUMERIC_KEYS_LALT_ON_HOLD MT(KC_LALT, TO_NUMERIC_KEYS)
-#define TO_BASE_LALT_ON_HOLD MT(KC_LALT, TO_BASE)
+#define TO_NUMERIC_KEYS_LALT_ON_HOLD LALT_T(TO_NUMERIC_KEYS)
+#define TO_BASE_LALT_ON_HOLD LALT_T(TO_BASE)
 
 #ifndef POINTING_DEVICE_ENABLE
 #    define DRGSCRL KC_NO
@@ -97,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______,  _______, XXXXXXX, KC_GRV, KC_NUBS, XXXXXXX,    KC_RBRC, KC_NUHS, KC_COMM,  KC_DOT, KC_RALT, _______,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
                                    _______, _______, _______,    TO_POINTER, _______,
-                                   TO_BASE_LALT_ON_HOLD, TO_NAVIGATION,    _______
+                         TO_BASE_LALT_ON_HOLD, TO_NAVIGATION,    _______
   //                            ╰───────────────────────────╯ ╰──────────────────╯
   ),
 
