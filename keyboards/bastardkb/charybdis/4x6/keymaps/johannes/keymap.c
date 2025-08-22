@@ -23,7 +23,6 @@
 enum charybdis_keymap_layers {
     LAYER_BASE = 0,
     LAYER_NUMERIC_KEYS,
-    LAYER_SPECIAL_KEYS,
     LAYER_NAVIGATION,
     LAYER_POINTER,
 };
@@ -33,7 +32,6 @@ enum charybdis_keymap_layers {
 
 #ifdef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 static uint16_t auto_pointer_layer_timer = 0;
-
 #    ifndef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS
 #        define CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS 1000
 #    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS
@@ -42,6 +40,13 @@ static uint16_t auto_pointer_layer_timer = 0;
 #        define CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD 8
 #    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD
 #endif     // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
+
+// Pick any HSV you like for each layer:
+#define HSV_BASE      HSV_WHITE     // Base
+#define HSV_NUM       HSV_YELLOW    // Numeric
+#define HSV_NAV       HSV_MAGENTA   // Navigation
+#define HSV_POINTER   HSV_CYAN      // Pointer
+
 
 /** these are aliases for german keycodes */
 #define DE_SHARP_S KC_MINS
@@ -67,6 +72,52 @@ static uint16_t auto_pointer_layer_timer = 0;
 #    define S_D_MOD KC_NO
 #    define SNIPING KC_NO
 #endif // !POINTING_DEVICE_ENABLE
+
+
+// ---------- Per-layer colors (RGB Matrix or RGB Light) ----------
+
+#define HSV_BASE      HSV_WHITE
+#define HSV_NUM       HSV_YELLOW
+#define HSV_NAV       HSV_MAGENTA
+#define HSV_POINTER   HSV_CYAN
+
+static void apply_layer_color(uint8_t layer) {
+#if defined(RGB_MATRIX_ENABLE)
+    rgb_matrix_mode_noeeprom(RGB_MATRIX_SOLID_COLOR);
+    switch (layer) {
+        case LAYER_POINTER:    rgb_matrix_sethsv_noeeprom(HSV_POINTER); break;
+        case LAYER_NAVIGATION: rgb_matrix_sethsv_noeeprom(HSV_NAV);     break;
+        case LAYER_NUMERIC_KEYS: rgb_matrix_sethsv_noeeprom(HSV_NUM);   break;
+        case LAYER_BASE:
+        default:               rgb_matrix_sethsv_noeeprom(HSV_BASE);    break;
+    }
+#elif defined(RGBLIGHT_ENABLE)
+    rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+    switch (layer) {
+        case LAYER_POINTER:    rgblight_sethsv_noeeprom(HSV_POINTER); break;
+        case LAYER_NAVIGATION: rgblight_sethsv_noeeprom(HSV_NAV);     break;
+        case LAYER_NUMERIC_KEYS: rgblight_sethsv_noeeprom(HSV_NUM);   break;
+        case LAYER_BASE:
+        default:               rgblight_sethsv_noeeprom(HSV_BASE);    break;
+    }
+#else
+    (void)layer;
+#endif
+}
+
+// Set base color at boot
+void keyboard_post_init_user(void) {
+    apply_layer_color(LAYER_BASE);
+}
+
+// Update color on layer change
+layer_state_t layer_state_set_user(layer_state_t state) {
+    apply_layer_color(get_highest_layer(state));
+#ifdef CHARYBDIS_AUTO_SNIPING_ON_LAYER
+    charybdis_set_pointer_sniping_enabled(layer_state_cmp(state, CHARYBDIS_AUTO_SNIPING_ON_LAYER));
+#endif
+    return state;
+}
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -135,13 +186,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #ifdef POINTING_DEVICE_ENABLE
 #    ifdef CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
-    if (abs(mouse_report.x) > CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD || abs(mouse_report.y) > CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD) {
+    if (abs(mouse_report.x) > CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD ||
+        abs(mouse_report.y) > CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_THRESHOLD) {
         if (auto_pointer_layer_timer == 0) {
             layer_on(LAYER_POINTER);
-#        ifdef RGB_MATRIX_ENABLE
-            rgb_matrix_mode_noeeprom(RGB_MATRIX_NONE);
-            rgb_matrix_sethsv_noeeprom(HSV_GREEN);
-#        endif // RGB_MATRIX_ENABLE
+            apply_layer_color(LAYER_POINTER);
         }
         auto_pointer_layer_timer = timer_read();
     }
@@ -149,22 +198,12 @@ report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
 }
 
 void matrix_scan_user(void) {
-    if (auto_pointer_layer_timer != 0 && TIMER_DIFF_16(timer_read(), auto_pointer_layer_timer) >= CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS) {
+    if (auto_pointer_layer_timer != 0 &&
+        TIMER_DIFF_16(timer_read(), auto_pointer_layer_timer) >= CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_TIMEOUT_MS) {
         auto_pointer_layer_timer = 0;
         layer_off(LAYER_POINTER);
-#        ifdef RGB_MATRIX_ENABLE
-        rgb_matrix_mode_noeeprom(RGB_MATRIX_DEFAULT_MODE);
-#        endif // RGB_MATRIX_ENABLE
+        apply_layer_color(get_highest_layer(layer_state));
     }
 }
 #    endif // CHARYBDIS_AUTO_POINTER_LAYER_TRIGGER_ENABLE
-
-/**
-#    ifdef CHARYBDIS_AUTO_SNIPING_ON_LAYER
-layer_state_t layer_state_set_user(layer_state_t state) {
-    charybdis_set_pointer_sniping_enabled(layer_state_cmp(state, CHARYBDIS_AUTO_SNIPING_ON_LAYER));
-    return state;
-}
-#    endif // CHARYBDIS_AUTO_SNIPING_ON_LAYER
-*/
 #endif     // POINTING_DEVICE_ENABLE
